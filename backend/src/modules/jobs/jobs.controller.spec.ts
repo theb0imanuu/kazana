@@ -4,10 +4,12 @@ import { JobsService } from './jobs.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Reflector } from '@nestjs/core';
 import { RemoteType, JobStatus, Priority } from '@prisma/client';
+import { ActivitiesService } from '../activities/activities.service';
 
 describe('JobsController', () => {
   let controller: JobsController;
   let service: JobsService;
+  let activitiesService: ActivitiesService;
 
   const mockJobsService = {
     create: jest.fn(),
@@ -19,11 +21,16 @@ describe('JobsController', () => {
     remove: jest.fn(),
   };
 
+  const mockActivitiesService = {
+    findAllByJob: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [JobsController],
       providers: [
         { provide: JobsService, useValue: mockJobsService },
+        { provide: ActivitiesService, useValue: mockActivitiesService },
         Reflector,
       ],
     })
@@ -33,6 +40,7 @@ describe('JobsController', () => {
 
     controller = module.get<JobsController>(JobsController);
     service = module.get<JobsService>(JobsService);
+    activitiesService = module.get<ActivitiesService>(ActivitiesService);
   });
 
   afterEach(() => {
@@ -115,6 +123,18 @@ describe('JobsController', () => {
       const result = await controller.updatePriority(user, jobId, dto);
 
       expect(service.updatePriority).toHaveBeenCalledWith(user.id, jobId, dto);
+      expect(result).toBe(expected);
+    });
+  });
+
+  describe('findActivities', () => {
+    it('should call activitiesService.findAllByJob with user ID and job ID (user isolation)', async () => {
+      const expected = [{ id: 'act-1', content: 'Testing activity', jobId, userId: user.id }];
+      jest.spyOn(activitiesService, 'findAllByJob').mockResolvedValue(expected as any);
+
+      const result = await controller.findActivities(user, jobId);
+
+      expect(activitiesService.findAllByJob).toHaveBeenCalledWith(user.id, jobId);
       expect(result).toBe(expected);
     });
   });

@@ -916,6 +916,209 @@ Delete a document. Deletes the item from Azure Blob Storage and removes the reco
 
 ---
 
+### 📝 Activities
+
+#### `GET /activities`
+List all activities belonging to the authenticated user.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "ae585b81-d147-4952-b88a-36b3df5e975a",
+      "type": "STATUS_CHANGE",
+      "content": "Job status updated to APPLIED",
+      "metadata": {
+        "from": "WISHLIST",
+        "to": "APPLIED"
+      },
+      "createdAt": "2026-08-09T19:00:00.000Z",
+      "updatedAt": "2026-08-09T19:00:00.000Z",
+      "userId": "7ac15b81-d147-4952-b88a-36b3df5e975a",
+      "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a"
+    }
+  ]
+}
+```
+
+#### `GET /jobs/:jobId/activities`
+List all activities associated with a specific job, scoped to user.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "ae585b81-d147-4952-b88a-36b3df5e975a",
+      "type": "NOTE",
+      "content": "Talked to the recruiter today.",
+      "createdAt": "2026-08-09T19:10:00.000Z",
+      "updatedAt": "2026-08-09T19:10:00.000Z",
+      "userId": "7ac15b81-d147-4952-b88a-36b3df5e975a",
+      "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a"
+    }
+  ]
+}
+```
+
+#### `POST /activities/notes`
+Add a custom text note activity.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "content": "Followed up with engineering manager via email.",
+  "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "ae595b81-d147-4952-b88a-36b3df5e975a",
+    "type": "NOTE",
+    "content": "Followed up with engineering manager via email.",
+    "userId": "7ac15b81-d147-4952-b88a-36b3df5e975a",
+    "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+    "createdAt": "2026-08-09T19:20:00.000Z"
+  }
+}
+```
+
+---
+
+### ⏰ Reminders
+
+#### `POST /reminders`
+Create a new reminder. Triggers a transaction-bound `REMINDER_CREATED` activity log automatically.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "title": "Prepare portfolio presentation",
+  "dueAt": "2026-08-12T10:00:00.000Z",
+  "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "be565b81-d147-4952-b88a-36b3df5e975a",
+    "title": "Prepare portfolio presentation",
+    "dueAt": "2026-08-12T10:00:00.000Z",
+    "completed": false,
+    "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a"
+  }
+}
+```
+
+#### `GET /reminders`
+List reminders for the user, with support for filtering by completed status, due date limits, and job.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Query Parameters**:
+  - `completed`: Filter by completed state (`true`/`false`)
+  - `dueBefore`: ISO 8601 date string
+  - `dueAfter`: ISO 8601 date string
+  - `jobId`: UUID string
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "be565b81-d147-4952-b88a-36b3df5e975a",
+      "title": "Prepare portfolio presentation",
+      "dueAt": "2026-08-12T10:00:00.000Z",
+      "completed": false,
+      "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a"
+    }
+  ]
+}
+```
+
+#### `GET /reminders/:id`
+Retrieve details of a single reminder.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "be565b81-d147-4952-b88a-36b3df5e975a",
+    "title": "Prepare portfolio presentation",
+    "dueAt": "2026-08-12T10:00:00.000Z",
+    "completed": false,
+    "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a"
+  }
+}
+```
+
+#### `PATCH /reminders/:id`
+Update a reminder.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "title": "Update portfolio presentation title"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "be565b81-d147-4952-b88a-36b3df5e975a",
+    "title": "Update portfolio presentation title",
+    "dueAt": "2026-08-12T10:00:00.000Z",
+    "completed": false
+  }
+}
+```
+
+#### `PATCH /reminders/:id/complete`
+Shortcut endpoint to complete a reminder.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "be565b81-d147-4952-b88a-36b3df5e975a",
+    "completed": true
+  }
+}
+```
+
+#### `DELETE /reminders/:id`
+Delete a reminder.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "success": true
+  }
+}
+```
+
+---
+
 ## 🔍 Database Inspection
 
 To run Prisma's visual database manager GUI:

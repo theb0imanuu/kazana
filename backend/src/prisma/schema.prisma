@@ -190,14 +190,16 @@ model Document {
 }
 
 model Activity {
-  id       String       @id @default(uuid()) @db.Uuid
-  type     ActivityType
-  content  String?      @db.Text
-  metadata Json?
-  userId   String       @db.Uuid
-  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  jobId    String?      @db.Uuid
-  job      Job?         @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  id        String       @id @default(uuid()) @db.Uuid
+  type      ActivityType
+  content   String?      @db.Text
+  metadata  Json?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  userId    String       @db.Uuid
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobId     String?      @db.Uuid
+  job       Job?         @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([jobId])

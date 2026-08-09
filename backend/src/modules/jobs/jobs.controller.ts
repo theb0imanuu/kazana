@@ -7,11 +7,15 @@ import { UpdateJobDto } from './dto/update-job.dto';
 import { JobsQueryDto } from './dto/jobs-query.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdatePriorityDto } from './dto/update-priority.dto';
+import { ActivitiesService } from '../activities/activities.service';
 
 @Controller('jobs')
 @UseGuards(JwtAuthGuard)
 export class JobsController {
-  constructor(private readonly jobsService: JobsService) {}
+  constructor(
+    private readonly jobsService: JobsService,
+    private readonly activitiesService: ActivitiesService,
+  ) {}
 
   @Post()
   async create(
@@ -35,6 +39,14 @@ export class JobsController {
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.jobsService.findOne(user.id, id);
+  }
+
+  @Get(':jobId/activities')
+  async findActivities(
+    @CurrentUser() user: { id: string },
+    @Param('jobId', ParseUUIDPipe) jobId: string,
+  ) {
+    return this.activitiesService.findAllByJob(user.id, jobId);
   }
 
   @Patch(':id')
