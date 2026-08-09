@@ -583,6 +583,237 @@ Delete a job tracking entry.
 
 ---
 
+### 👥 Contacts
+
+#### `POST /contacts`
+Create a new company contact.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "name": "John Doe",
+  "role": "Technical Recruiter",
+  "email": "john.doe@acme.com",
+  "phone": "+1-555-0199",
+  "linkedin": "https://linkedin.com/in/johndoe",
+  "notes": "Met at developer meetup",
+  "companyId": "7bc25b81-d147-4952-b88a-36b3df5e975a"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "9ec45b81-d147-4952-b88a-36b3df5e975a",
+    "name": "John Doe",
+    "role": "Technical Recruiter",
+    "email": "john.doe@acme.com",
+    "phone": "+1-555-0199",
+    "linkedin": "https://linkedin.com/in/johndoe",
+    "notes": "Met at developer meetup",
+    "companyId": "7bc25b81-d147-4952-b88a-36b3df5e975a",
+    "userId": "7ac15b81-d147-4952-b88a-36b3df5e975a"
+  }
+}
+```
+
+#### `GET /contacts`
+List all contacts belonging to the authenticated user.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "9ec45b81-d147-4952-b88a-36b3df5e975a",
+      "name": "John Doe",
+      "email": "john.doe@acme.com",
+      "company": {
+        "id": "7bc25b81-d147-4952-b88a-36b3df5e975a",
+        "name": "Acme Corp"
+      }
+    }
+  ]
+}
+```
+
+#### `GET /contacts/:id`
+Retrieve a single contact by ID.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "9ec45b81-d147-4952-b88a-36b3df5e975a",
+    "name": "John Doe",
+    "email": "john.doe@acme.com",
+    "company": {
+      "id": "7bc25b81-d147-4952-b88a-36b3df5e975a",
+      "name": "Acme Corp"
+    }
+  }
+}
+```
+
+#### `PATCH /contacts/:id`
+Update contact details.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "role": "Lead Recruiter"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "9ec45b81-d147-4952-b88a-36b3df5e975a",
+    "name": "John Doe",
+    "role": "Lead Recruiter"
+  }
+}
+```
+
+#### `DELETE /contacts/:id`
+Delete a contact.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "success": true
+  }
+}
+```
+
+---
+
+### 📅 Interviews
+
+#### `POST /interviews`
+Schedule a new interview. Triggers an `INTERVIEW_SCHEDULED` activity log automatically.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "type": "VIDEO",
+  "scheduledAt": "2026-08-15T14:00:00.000Z",
+  "duration": 45,
+  "location": "Google Meet",
+  "notes": "Systems design round",
+  "status": "SCHEDULED",
+  "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+  "contactId": "9ec45b81-d147-4952-b88a-36b3df5e975a"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "ae565b81-d147-4952-b88a-36b3df5e975a",
+    "type": "VIDEO",
+    "scheduledAt": "2026-08-15T14:00:00.000Z",
+    "duration": 45,
+    "location": "Google Meet",
+    "status": "SCHEDULED",
+    "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+    "contactId": "9ec45b81-d147-4952-b88a-36b3df5e975a"
+  }
+}
+```
+
+#### `GET /interviews`
+List all interviews scheduled under user's tracked jobs.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "ae565b81-d147-4952-b88a-36b3df5e975a",
+      "type": "VIDEO",
+      "scheduledAt": "2026-08-15T14:00:00.000Z",
+      "job": {
+        "id": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+        "title": "Software Engineer"
+      }
+    }
+  ]
+}
+```
+
+#### `GET /interviews/:id`
+Retrieve details of a single scheduled interview.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "ae565b81-d147-4952-b88a-36b3df5e975a",
+    "type": "VIDEO",
+    "scheduledAt": "2026-08-15T14:00:00.000Z",
+    "job": {
+      "id": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+      "title": "Software Engineer"
+    }
+  }
+}
+```
+
+#### `PATCH /interviews/:id`
+Update scheduled interview details.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "status": "COMPLETED"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "ae565b81-d147-4952-b88a-36b3df5e975a",
+    "status": "COMPLETED"
+  }
+}
+```
+
+#### `DELETE /interviews/:id`
+Delete an interview event.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "success": true
+  }
+}
+```
+
+---
+
 ## 🔍 Database Inspection
 
 To run Prisma's visual database manager GUI:

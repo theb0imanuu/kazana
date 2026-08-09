@@ -6,6 +6,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { CompaniesModule } from './modules/companies/companies.module';
 import { JobsModule } from './modules/jobs/jobs.module';
+import { ContactsModule } from './modules/contacts/contacts.module';
+import { InterviewsModule } from './modules/interviews/interviews.module';
 
 @Controller('health')
 export class HealthController {
@@ -29,6 +31,8 @@ export class HealthController {
     UsersModule,
     CompaniesModule,
     JobsModule,
+    ContactsModule,
+    InterviewsModule,
   ],
   controllers: [HealthController],
 })
