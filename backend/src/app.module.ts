@@ -12,14 +12,30 @@ import { DocumentsModule } from './modules/documents/documents.module';
 import { ActivitiesModule } from './modules/activities/activities.module';
 import { RemindersModule } from './modules/reminders/reminders.module';
 import { TemplatesModule } from './modules/templates/templates.module';
+import { QueuesModule } from './modules/queues/queues.module';
+import { RedisService } from './shared/services/redis.service';
+import { QueueService } from './modules/queues/queue.service';
 
 @Controller('health')
 export class HealthController {
+  constructor(
+    private readonly redisService: RedisService,
+    private readonly queueService: QueueService,
+  ) {}
+
   @Get()
   check() {
+    const redisAlive = this.redisService.isAlive();
     return {
-      status: 'ok',
+      status: redisAlive ? 'ok' : 'degraded',
       timestamp: new Date().toISOString(),
+      redis: {
+        status: redisAlive ? 'connected' : 'disconnected',
+      },
+      queues: {
+        email: this.queueService.getEmailQueueState(),
+        reminder: this.queueService.getReminderQueueState(),
+      },
     };
   }
 }
@@ -41,6 +57,7 @@ export class HealthController {
     ActivitiesModule,
     RemindersModule,
     TemplatesModule,
+    QueuesModule,
   ],
   controllers: [HealthController],
 })

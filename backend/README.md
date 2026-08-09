@@ -1228,6 +1228,32 @@ Delete a template.
 }
 ```
 
+### 🏥 Health Check
+
+#### `GET /health`
+Inspect application health, Redis connection state, and queue visibility.
+
+* **Response Body**:
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-08-09T23:13:00.000Z",
+  "redis": {
+    "status": "connected"
+  },
+  "queues": {
+    "email": {
+      "name": "email.queue",
+      "isReady": true
+    },
+    "reminder": {
+      "name": "reminder.queue",
+      "isReady": true
+    }
+  }
+}
+```
+
 ---
 
 ## 🔍 Database Inspection
