@@ -297,6 +297,292 @@ Change the password for the logged-in user.
 
 ---
 
+### 🏢 Companies
+
+#### `POST /companies`
+Create a new company.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "name": "Acme Corp",
+  "website": "https://acme.com",
+  "industry": "Technology",
+  "size": "50-100",
+  "location": "San Francisco, CA",
+  "notes": "Fast growing startup"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "7bc25b81-d147-4952-b88a-36b3df5e975a",
+    "name": "Acme Corp",
+    "website": "https://acme.com",
+    "industry": "Technology",
+    "size": "50-100",
+    "location": "San Francisco, CA",
+    "notes": "Fast growing startup",
+    "logoUrl": null,
+    "userId": "7ac15b81-d147-4952-b88a-36b3df5e975a"
+  }
+}
+```
+
+#### `GET /companies`
+List all companies belonging to the authenticated user.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "7bc25b81-d147-4952-b88a-36b3df5e975a",
+      "name": "Acme Corp",
+      "website": "https://acme.com",
+      "userId": "7ac15b81-d147-4952-b88a-36b3df5e975a"
+    }
+  ]
+}
+```
+
+#### `GET /companies/:id`
+Retrieve a single company by ID.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "7bc25b81-d147-4952-b88a-36b3df5e975a",
+    "name": "Acme Corp",
+    "website": "https://acme.com",
+    "userId": "7ac15b81-d147-4952-b88a-36b3df5e975a"
+  }
+}
+```
+
+#### `PATCH /companies/:id`
+Update a company's details.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "notes": "Updated notes"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "7bc25b81-d147-4952-b88a-36b3df5e975a",
+    "name": "Acme Corp",
+    "notes": "Updated notes",
+    "userId": "7ac15b81-d147-4952-b88a-36b3df5e975a"
+  }
+}
+```
+
+#### `DELETE /companies/:id`
+Delete a company.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "success": true
+  }
+}
+```
+
+---
+
+### 💼 Jobs
+
+#### `POST /jobs`
+Create a new job tracking entry. Creates an initial status change activity record automatically.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "title": "Software Engineer",
+  "remoteType": "REMOTE",
+  "status": "WISHLIST",
+  "priority": "MEDIUM",
+  "companyId": "7bc25b81-d147-4952-b88a-36b3df5e975a",
+  "salaryMin": 100000,
+  "salaryMax": 140000,
+  "salaryCurrency": "USD",
+  "location": "Remote, US"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+    "title": "Software Engineer",
+    "remoteType": "REMOTE",
+    "status": "WISHLIST",
+    "priority": "MEDIUM",
+    "companyId": "7bc25b81-d147-4952-b88a-36b3df5e975a",
+    "userId": "7ac15b81-d147-4952-b88a-36b3df5e975a"
+  }
+}
+```
+
+#### `GET /jobs`
+Query list of jobs with support for search, filtering, and pagination.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Query Parameters**:
+  - `page`: Page number (e.g. `1`)
+  - `limit`: Items per page (e.g. `10`)
+  - `search`: Match on title, description, location, or company name (e.g. `Software`)
+  - `status`: Filter by status (`WISHLIST`, `APPLIED`, etc.)
+  - `priority`: Filter by priority (`LOW`, `MEDIUM`, etc.)
+  - `remoteType`: Filter by remote type (`ONSITE`, `HYBRID`, `REMOTE`)
+  - `companyId`: Filter by company UUID
+  - `minSalary` & `maxSalary`: Filter by salary ranges
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "id": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+        "title": "Software Engineer",
+        "remoteType": "REMOTE",
+        "status": "WISHLIST",
+        "priority": "MEDIUM",
+        "company": {
+          "id": "7bc25b81-d147-4952-b88a-36b3df5e975a",
+          "name": "Acme Corp"
+        }
+      }
+    ],
+    "meta": {
+      "total": 1,
+      "page": 1,
+      "limit": 10,
+      "totalPages": 1
+    }
+  }
+}
+```
+
+#### `GET /jobs/:id`
+Retrieve a single job tracking entry by ID.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+    "title": "Software Engineer",
+    "remoteType": "REMOTE",
+    "status": "WISHLIST",
+    "company": {
+      "name": "Acme Corp"
+    }
+  }
+}
+```
+
+#### `PATCH /jobs/:id`
+Update general details of a job tracking entry. Modifying `status` triggers an activity record.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "title": "Senior Software Engineer"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+    "title": "Senior Software Engineer"
+  }
+}
+```
+
+#### `PATCH /jobs/:id/status`
+Shortcut to update a job status. Triggers a transaction-wrapped status change activity record automatically.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "status": "APPLIED"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+    "status": "APPLIED"
+  }
+}
+```
+
+#### `PATCH /jobs/:id/priority`
+Shortcut to update a job priority.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "priority": "HIGH"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+    "priority": "HIGH"
+  }
+}
+```
+
+#### `DELETE /jobs/:id`
+Delete a job tracking entry.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "success": true
+  }
+}
+```
+
+---
+
 ## 🔍 Database Inspection
 
 To run Prisma's visual database manager GUI:

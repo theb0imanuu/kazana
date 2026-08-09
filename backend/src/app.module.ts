@@ -4,6 +4,8 @@ import { validate } from './config/configuration';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { CompaniesModule } from './modules/companies/companies.module';
+import { JobsModule } from './modules/jobs/jobs.module';
 
 @Controller('health')
 export class HealthController {
@@ -25,6 +27,8 @@ export class HealthController {
     PrismaModule,
     AuthModule,
     UsersModule,
+    CompaniesModule,
+    JobsModule,
   ],
   controllers: [HealthController],
 })
