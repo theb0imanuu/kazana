@@ -15,6 +15,7 @@ import { TemplatesModule } from './modules/templates/templates.module';
 import { QueuesModule } from './modules/queues/queues.module';
 import { RedisService } from './shared/services/redis.service';
 import { QueueService } from './modules/queues/queue.service';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 
 @Controller('health')
 export class HealthController {
@@ -58,6 +59,7 @@ export class HealthController {
     RemindersModule,
     TemplatesModule,
     QueuesModule,
+    AnalyticsModule,
   ],
   controllers: [HealthController],
 })

@@ -1254,6 +1254,90 @@ Inspect application health, Redis connection state, and queue visibility.
 }
 ```
 
+### 📊 Analytics
+
+#### `GET /analytics/dashboard`
+Retrieve formatted aggregated analytics statistics for the user's dashboard.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "totalJobs": 24,
+    "jobsByStatus": {
+      "WISHLIST": 5,
+      "APPLIED": 10,
+      "INTERVIEW": 4,
+      "OFFER": 2,
+      "REJECTED": 3
+    },
+    "jobsByPriority": {
+      "LOW": 4,
+      "MEDIUM": 12,
+      "HIGH": 6,
+      "URGENT": 2
+    },
+    "applicationsThisWeek": 3,
+    "applicationsThisMonth": 12,
+    "interviewsScheduled": 2,
+    "offers": 2,
+    "acceptedJobs": 0,
+    "rejectedJobs": 3,
+    "conversionMetrics": {
+      "responseRate": 37.5,
+      "interviewConversionRate": 25.0,
+      "offerRate": 8.3
+    },
+    "upcomingInterviews": [
+      {
+        "id": "ae565b81-d147-4952-b88a-36b3df5e975a",
+        "type": "VIDEO",
+        "scheduledAt": "2026-08-15T14:00:00.000Z",
+        "duration": 45,
+        "location": "Google Meet",
+        "job": {
+          "id": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+          "title": "Software Engineer",
+          "company": {
+            "name": "Acme Corp"
+          }
+        }
+      }
+    ],
+    "upcomingReminders": [
+      {
+        "id": "be565b81-d147-4952-b88a-36b3df5e975a",
+        "title": "Prepare portfolio presentation",
+        "dueAt": "2026-08-12T10:00:00.000Z",
+        "completed": false,
+        "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+        "job": {
+          "id": "8dc35b81-d147-4952-b88a-36b3df5e975a",
+          "title": "Software Engineer"
+        }
+      }
+    ],
+    "recentActivities": [
+      {
+        "id": "ae585b81-d147-4952-b88a-36b3df5e975a",
+        "type": "STATUS_CHANGE",
+        "content": "Job status updated to APPLIED",
+        "metadata": {
+          "from": "WISHLIST",
+          "to": "APPLIED"
+        },
+        "createdAt": "2026-08-09T19:00:00.000Z",
+        "updatedAt": "2026-08-09T19:00:00.000Z",
+        "userId": "7ac15b81-d147-4952-b88a-36b3df5e975a",
+        "jobId": "8dc35b81-d147-4952-b88a-36b3df5e975a"
+      }
+    ]
+  }
+}
+```
+
 ---
 
 ## 🔍 Database Inspection
