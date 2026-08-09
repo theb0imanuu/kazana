@@ -814,6 +814,108 @@ Delete an interview event.
 
 ---
 
+### 📄 Documents
+
+#### `POST /documents/upload`
+Upload a document. Integrates with Azure Blob Storage. Triggers a transaction-bound `DOCUMENT_ADDED` activity log automatically.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Format**: `multipart/form-data`
+* **Request Body**:
+  - `file`: Binary file upload (PDF, Word docs, PNG, JPEG, Plain Text; max 5MB)
+  - `type`: Document type (`RESUME`, `COVER_LETTER`, `PORTFOLIO`, `OTHER`)
+  - `jobId`: Optional UUID of associated Job
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "ae575b81-d147-4952-b88a-36b3df5e975a",
+    "name": "resume.pdf",
+    "url": "https://storage.blob.core.windows.net/container/user-uuid/doc-uuid.pdf",
+    "size": 102450,
+    "mimeType": "application/pdf",
+    "type": "RESUME",
+    "isDefault": false
+  }
+}
+```
+
+#### `GET /documents`
+List all documents belonging to the authenticated user.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "ae575b81-d147-4952-b88a-36b3df5e975a",
+      "name": "resume.pdf",
+      "url": "https://storage.blob.core.windows.net/container/user-uuid/doc-uuid.pdf",
+      "size": 102450,
+      "mimeType": "application/pdf",
+      "type": "RESUME",
+      "isDefault": false
+    }
+  ]
+}
+```
+
+#### `GET /documents/:id`
+Retrieve details of a single document by ID.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "ae575b81-d147-4952-b88a-36b3df5e975a",
+    "name": "resume.pdf",
+    "url": "https://storage.blob.core.windows.net/container/user-uuid/doc-uuid.pdf",
+    "size": 102450,
+    "mimeType": "application/pdf",
+    "type": "RESUME",
+    "isDefault": false
+  }
+}
+```
+
+#### `PATCH /documents/:id/default`
+Set a document as the default for its type (e.g. default Resume). Toggles other documents of the same type for this user to `isDefault: false`.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "ae575b81-d147-4952-b88a-36b3df5e975a",
+    "name": "resume.pdf",
+    "type": "RESUME",
+    "isDefault": true
+  }
+}
+```
+
+#### `DELETE /documents/:id`
+Delete a document. Deletes the item from Azure Blob Storage and removes the record from database.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "success": true
+  }
+}
+```
+
+---
+
 ## 🔍 Database Inspection
 
 To run Prisma's visual database manager GUI:

@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, IsNotEmpty, validateSync } from 'class-validator';
+import { IsEnum, IsNumber, IsString, IsNotEmpty, IsOptional, validateSync } from 'class-validator';
 
 export enum Environment {
   Development = 'development',
@@ -34,13 +34,13 @@ class EnvironmentVariables {
   @IsNotEmpty()
   JWT_EXPIRES_IN!: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  AZURE_STORAGE_CONNECTION_STRING!: string;
+  AZURE_STORAGE_CONNECTION_STRING?: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  AZURE_STORAGE_CONTAINER_NAME!: string;
+  AZURE_STORAGE_CONTAINER?: string;
 }
 
 export function validate(config: Record<string, unknown>) {
