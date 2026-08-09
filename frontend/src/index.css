@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ios-blue: #007AFF;
+  --color-ios-green: #34C759;
+  --color-ios-orange: #FF9500;
+  --color-ios-red: #FF3B30;
+  --color-ios-purple: #AF52DE;
+  
+  --color-ios-bg-light: #F5F5F7;
+  --color-ios-card-light: #FFFFFF;
+  --color-ios-border-light: #E5E5EA;
+  
+  --color-ios-bg-dark: #000000;
+  --color-ios-card-dark: #1C1C1E;
+  --color-ios-border-dark: #2C2C2E;
+
+  --font-sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  
+  --radius-ios-sm: 8px;
+  --radius-ios-md: 12px;
+  --radius-ios-lg: 16px;
+  --radius-ios-xl: 20px;
+}
+
+@layer base {
+  html, body {
+    @apply font-sans antialiased text-neutral-900 bg-ios-bg-light transition-colors duration-200;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+
+  .dark body {
+    @apply text-neutral-100 bg-ios-bg-dark;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ios-blue ring-offset-2 ring-offset-ios-bg-light dark:ring-offset-ios-bg-dark;
+  }
+
+  /* Smooth scroll */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Respect reduced motion settings */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Sleek iOS style scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-neutral-300 dark:bg-neutral-800 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-neutral-400 dark:bg-neutral-700;
+  }
+}
