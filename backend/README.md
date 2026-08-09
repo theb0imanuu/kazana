@@ -1,98 +1,207 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Kazana Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> *"Your job search, beautifully organized."*
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Kazana is a full-stack job tracking application designed to help job seekers organize their applications, interviews, contacts, documents, and reminders in a beautiful, structured interface.
 
-## Description
+This repository contains the **NestJS 11** backend engine.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## 🛠️ Technology Stack
 
+* **Core Framework**: NestJS 11 + TypeScript (Strict Type Checking)
+* **Database Layer**: PostgreSQL 16
+* **ORM**: Prisma
+* **Authentication**: Passport JWT + Bcrypt
+* **Cache & Queues**: Redis 7 + BullMQ
+* **Cloud Uploads**: Azure Blob Storage
+* **Containerization**: Docker (Multi-stage build)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Environment Configuration
+
+Copy the example environment file:
 ```bash
-$ npm install
+cp .env.example .env
 ```
 
-## Compile and run the project
+Review and adjust the configurations in `.env`:
+* `PORT`: Port the server runs on (Default: `3000`).
+* `DATABASE_URL`: Connection string for PostgreSQL (e.g. `postgresql://postgres:postgres@127.0.0.1:5435/kazana?schema=public`).
+* `JWT_SECRET`: Secret key used for signing JWTs.
+* `JWT_EXPIRES_IN`: Access token expiration duration (e.g. `7d` for 7 days).
 
+### 2. Run PostgreSQL via Docker
+
+Run a PostgreSQL container using port `5435` matching the default `.env` settings:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker run -d --name postgres16 -p 5435:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=kazana postgres:16-alpine
 ```
 
-## Run tests
+### 3. Apply Database Migrations
 
+Deploy database tables and generate the typesafe Prisma Client:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npx prisma migrate dev --name init
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 4. Install Dependencies & Build
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
+npm run build
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 5. Running the App
 
-## Resources
+```bash
+# Development (watch mode)
+npm run start:dev
 
-Check out a few resources that may come in handy when working with NestJS:
+# Production mode
+npm run start:prod
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 6. Run Tests
 
-## Support
+```bash
+npm run test
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
+## 🧭 API Endpoints
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+All successful API responses are wrapped in a standard JSON envelope format:
+```json
+{
+  "success": true,
+  "data": ...
+}
+```
 
-## License
+If an error is thrown, the global exception filter catches it and formats it uniformly:
+```json
+{
+  "success": false,
+  "statusCode": 401,
+  "timestamp": "2026-08-09T15:10:16.283Z",
+  "path": "/auth/me",
+  "message": "Invalid token or user not found"
+}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+### 🏥 Health Checks
+
+#### `GET /health`
+Verify that the application is running and healthy.
+
+* **Authorization**: None (Public)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "status": "ok",
+    "timestamp": "2026-08-09T14:11:16.283Z"
+  }
+}
+```
+
+---
+
+### 🔐 Authentication
+
+#### `POST /auth/register`
+Register a new user account.
+
+* **Authorization**: None (Public)
+* **Request Body**:
+```json
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "name": "Jane Doe"
+}
+```
+* **Response Body** (Never returns `passwordHash`):
+```json
+{
+  "success": true,
+  "data": {
+    "id": "7ac15b81-d147-4952-b88a-36b3df5e975a",
+    "email": "user@example.com",
+    "name": "Jane Doe",
+    "avatarUrl": null,
+    "timezone": null,
+    "createdAt": "2026-08-09T15:02:10.000Z",
+    "updatedAt": "2026-08-09T15:02:10.000Z"
+  }
+}
+```
+
+#### `POST /auth/login`
+Authenticate with email and password to receive a JWT access token.
+
+* **Authorization**: None (Public)
+* **Request Body**:
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+* **Response Body** (Contains token and user details, expires in 7 days):
+```json
+{
+  "success": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "user": {
+      "id": "7ac15b81-d147-4952-b88a-36b3df5e975a",
+      "email": "user@example.com",
+      "name": "Jane Doe",
+      "avatarUrl": null,
+      "timezone": null,
+      "createdAt": "2026-08-09T15:02:10.000Z",
+      "updatedAt": "2026-08-09T15:02:10.000Z"
+    }
+  }
+}
+```
+
+#### `GET /auth/me`
+Retrieve details of the currently logged-in user profile.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "7ac15b81-d147-4952-b88a-36b3df5e975a",
+    "email": "user@example.com",
+    "name": "Jane Doe",
+    "avatarUrl": null,
+    "timezone": null,
+    "createdAt": "2026-08-09T15:02:10.000Z",
+    "updatedAt": "2026-08-09T15:02:10.000Z"
+  }
+}
+```
+
+---
+
+## 🔍 Database Inspection
+
+To run Prisma's visual database manager GUI:
+```bash
+npx prisma studio
+```
+This serves a GUI client at **`http://localhost:5555`** where you can view and edit records.

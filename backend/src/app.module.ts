@@ -2,6 +2,7 @@ import { Controller, Get, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from './config/configuration';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Controller('health')
 export class HealthController {
@@ -21,6 +22,7 @@ export class HealthController {
       validate,
     }),
     PrismaModule,
+    AuthModule,
   ],
   controllers: [HealthController],
 })
