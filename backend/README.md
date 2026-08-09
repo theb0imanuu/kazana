@@ -1119,6 +1119,117 @@ Delete a reminder.
 
 ---
 
+### 📋 Templates
+
+#### `POST /templates`
+Create a new template. Placeholder variables inside double curly brackets `{{variableName}}` will be parsed and stored automatically.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "name": "Intro Email",
+  "subject": "Applying at {{company}}",
+  "body": "Hello {{name}}, I would like to apply for the {{jobTitle}} position.",
+  "type": "EMAIL"
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "ce565b81-d147-4952-b88a-36b3df5e975a",
+    "name": "Intro Email",
+    "subject": "Applying at {{company}}",
+    "body": "Hello {{name}}, I would like to apply for the {{jobTitle}} position.",
+    "type": "EMAIL",
+    "variables": ["company", "name", "jobTitle"]
+  }
+}
+```
+
+#### `GET /templates`
+List all templates belonging to the authenticated user.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "ce565b81-d147-4952-b88a-36b3df5e975a",
+      "name": "Intro Email",
+      "subject": "Applying at {{company}}",
+      "body": "Hello {{name}}, I would like to apply for the {{jobTitle}} position.",
+      "type": "EMAIL",
+      "variables": ["company", "name", "jobTitle"]
+    }
+  ]
+}
+```
+
+#### `GET /templates/:id`
+Retrieve details of a single template by ID.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "ce565b81-d147-4952-b88a-36b3df5e975a",
+    "name": "Intro Email",
+    "subject": "Applying at {{company}}",
+    "body": "Hello {{name}}, I would like to apply for the {{jobTitle}} position.",
+    "type": "EMAIL",
+    "variables": ["company", "name", "jobTitle"]
+  }
+}
+```
+
+#### `PATCH /templates/:id`
+Update a template. Placeholder variables will be re-parsed if subject or body changes.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Request Body**:
+```json
+{
+  "body": "Hello {{name}}, I'm interested in the {{jobTitle}} role. Please check my portfolio at {{portfolioUrl}}."
+}
+```
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "ce565b81-d147-4952-b88a-36b3df5e975a",
+    "name": "Intro Email",
+    "subject": "Applying at {{company}}",
+    "body": "Hello {{name}}, I'm interested in the {{jobTitle}} role. Please check my portfolio at {{portfolioUrl}}.",
+    "type": "EMAIL",
+    "variables": ["company", "name", "jobTitle", "portfolioUrl"]
+  }
+}
+```
+
+#### `DELETE /templates/:id`
+Delete a template.
+
+* **Authorization**: Bearer JWT Token (`Authorization: Bearer <token>`)
+* **Response Body**:
+```json
+{
+  "success": true,
+  "data": {
+    "success": true
+  }
+}
+```
+
+---
+
 ## 🔍 Database Inspection
 
 To run Prisma's visual database manager GUI:
