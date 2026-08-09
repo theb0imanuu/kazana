@@ -48,6 +48,10 @@ export class EmailProcessor implements OnModuleInit, OnModuleDestroy {
     this.worker.on('failed', (job, err) => {
       this.logger.error(`Email Job #${job?.id} failed with error: ${err.message}`);
     });
+
+    this.worker.on('error', (err) => {
+      this.logger.error(`Worker error: ${err.message}`);
+    });
   }
 
   async onModuleDestroy() {

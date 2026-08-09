@@ -14,16 +14,20 @@ describe('AppController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  });
+  }, 30000);
 
-  it('/ (GET)', () => {
+  it('/health (GET)', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get('/health')
       .expect(200)
-      .expect('Hello World!');
-  });
+      .expect((res) => {
+        expect(res.body).toHaveProperty('status');
+        expect(res.body).toHaveProperty('redis');
+        expect(res.body).toHaveProperty('queues');
+      });
+  }, 10000);
 
   afterEach(async () => {
     await app.close();
-  });
+  }, 10000);
 });

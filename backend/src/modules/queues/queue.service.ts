@@ -30,20 +30,24 @@ export class QueueService implements OnModuleInit {
       },
     });
 
-    try {
-      await this.reminderQueue.upsertJobScheduler(
-        'daily-reminder-check-scheduler',
-        {
-          pattern: '0 0 * * *',
-        },
-        {
-          name: 'daily-reminder-check',
-          data: {},
-        },
-      );
-      this.logger.log('Daily repeatable reminder check job scheduled successfully');
-    } catch (err) {
-      this.logger.error(`Failed to schedule repeatable daily reminder check job: ${(err as Error).message}`);
+    if (this.redisService.isAlive()) {
+      try {
+        await this.reminderQueue.upsertJobScheduler(
+          'daily-reminder-check-scheduler',
+          {
+            pattern: '0 0 * * *',
+          },
+          {
+            name: 'daily-reminder-check',
+            data: {},
+          },
+        );
+        this.logger.log('Daily repeatable reminder check job scheduled successfully');
+      } catch (err) {
+        this.logger.error(`Failed to schedule repeatable daily reminder check job: ${(err as Error).message}`);
+      }
+    } else {
+      this.logger.warn('Skipping repeatable job scheduling: Redis is not connected');
     }
   }
 

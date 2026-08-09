@@ -88,6 +88,10 @@ export class ReminderProcessor implements OnModuleInit, OnModuleDestroy {
     this.worker.on('failed', (job, err) => {
       this.logger.error(`Reminder repeatable Check Job failed with error: ${err.message}`);
     });
+
+    this.worker.on('error', (err) => {
+      this.logger.error(`Worker error: ${err.message}`);
+    });
   }
 
   async onModuleDestroy() {
