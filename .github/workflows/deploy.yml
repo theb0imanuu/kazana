@@ -1,0 +1,105 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: kazana
+        ports:
+          - 5435:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-cache: 'npm'
+
+      # =========================================================================
+      # BACKEND
+      # =========================================================================
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run Prisma Migrations & Generate Client
+        working-directory: ./backend
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5435/kazana?schema=public"
+        run: |
+          npx prisma migrate deploy
+          npx prisma generate
+
+      - name: Run Backend Unit Tests
+        working-directory: ./backend
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5435/kazana?schema=public"
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          JWT_SECRET: test-secret-key-change-me
+        run: npm test
+
+      - name: Run Backend E2E Tests
+        working-directory: ./backend
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5435/kazana?schema=public"
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          JWT_SECRET: test-secret-key-change-me
+        run: npm run test:e2e
+
+      - name: Build Backend
+        working-directory: ./backend
+        run: npm run build
+
+      # =========================================================================
+      # FRONTEND
+      # =========================================================================
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run Frontend Tests
+        working-directory: ./frontend
+        run: npm test
+
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      # =========================================================================
+      # CONTAINERS
+      # =========================================================================
+      - name: Build Docker Container Images
+        run: |
+          docker build -t kazana-backend:latest ./backend
+          docker build -t kazana-frontend:latest ./frontend

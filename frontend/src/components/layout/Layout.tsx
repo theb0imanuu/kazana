@@ -12,6 +12,7 @@ import {
   Menu,
   Settings,
   X,
+  FileSignature,
 } from 'lucide-react';
 import { Avatar } from '../ui/Avatar';
 import { Button } from '../ui/Button';
@@ -33,6 +34,7 @@ export const Layout: React.FC = () => {
     { label: 'Companies', path: '/companies', icon: Building2 },
     { label: 'Interviews', path: '/interviews', icon: Calendar },
     { label: 'Documents', path: '/documents', icon: FileText },
+    { label: 'Templates', path: '/templates', icon: FileSignature },
     { label: 'Settings', path: '/settings', icon: Settings },
   ];
 

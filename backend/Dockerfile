@@ -4,7 +4,7 @@ FROM node:22-alpine AS builder
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-COPY prisma ./prisma/
+COPY src/prisma ./src/prisma/
 
 # Install all dependencies (including devDependencies for building)
 RUN npm ci
@@ -13,7 +13,7 @@ RUN npm ci
 COPY . .
 
 # Generate Prisma Client
-RUN npx prisma generate
+RUN npx prisma generate --schema=src/prisma/schema.prisma
 
 # Build the NestJS project
 RUN npm run build
@@ -32,7 +32,7 @@ RUN npm ci --omit=dev
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /usr/src/app/node_modules/@prisma/client ./node_modules/@prisma/client
-COPY --from=builder /usr/src/app/prisma ./prisma
+COPY --from=builder /usr/src/app/src/prisma ./src/prisma
 
 # Expose port and run
 EXPOSE 3000

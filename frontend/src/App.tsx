@@ -20,6 +20,7 @@ import { CompanyDetailPage } from './features/companies/CompanyDetailPage';
 import { InterviewsPage } from './features/interviews/InterviewsPage';
 import { DocumentsPage } from './features/documents/DocumentsPage';
 import { SettingsPage } from './features/settings/SettingsPage';
+import { TemplatesPage } from './features/templates/TemplatesPage';
 
 function App() {
   const initializeAuth = useAuthStore((state) => state.initialize);
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/companies/:id" element={<CompanyDetailPage />} />
                 <Route path="/interviews" element={<InterviewsPage />} />
                 <Route path="/documents" element={<DocumentsPage />} />
+                <Route path="/templates" element={<TemplatesPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
               </Route>
             </Route>

@@ -1,18 +1,30 @@
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card } from '../../components/ui/Card';
 import { toast } from '../../components/ui/Toast';
 
+import { useMutation } from '@tanstack/react-query';
+import { registerUser } from './api';
+
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
-  const login = useAuthStore((state) => state.login);
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
+
+  const mutation = useMutation({
+    mutationFn: registerUser,
+    onSuccess: () => {
+      toast.success('Account created successfully! Please log in.');
+      navigate('/login');
+    },
+    onError: (err: any) => {
+      const msg = err.response?.data?.message || 'Failed to create account. Please try again.';
+      toast.error(msg);
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,13 +32,7 @@ export const RegisterPage: React.FC = () => {
       toast.error('Please fill in all fields');
       return;
     }
-    setLoading(true);
-    setTimeout(() => {
-      login('mock-access-token', { id: 'mock-user-id', email, name });
-      setLoading(false);
-      toast.success('Account created successfully!');
-      navigate('/');
-    }, 1000);
+    mutation.mutate({ name, email, password });
   };
 
   return (
@@ -62,7 +68,7 @@ export const RegisterPage: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <Button type="submit" variant="primary" className="w-full" isLoading={loading}>
+          <Button type="submit" variant="primary" className="w-full" isLoading={mutation.isPending}>
             Sign Up
           </Button>
         </form>
