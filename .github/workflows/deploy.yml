@@ -103,7 +103,7 @@ jobs:
       - name: Build Frontend
         working-directory: ./frontend
         env:
-          VITE_API_URL: "https://kazana-api-b2hjfdapcgbydwam.canadacentral-01.azurewebsites.net"
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: |
           npm run build -- --base=/kazana/
           cp dist/index.html dist/404.html
