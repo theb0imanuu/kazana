@@ -19,12 +19,17 @@ class EnvironmentVariables {
   @IsNotEmpty()
   DATABASE_URL!: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  REDIS_HOST!: string;
+  REDIS_HOST?: string;
 
+  @IsOptional()
   @IsNumber()
-  REDIS_PORT: number = 6379;
+  REDIS_PORT?: number;
+
+  @IsOptional()
+  @IsString()
+  REDIS_URL?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -44,6 +49,10 @@ class EnvironmentVariables {
 }
 
 export function validate(config: Record<string, unknown>) {
+  if (!config.REDIS_URL && !config.REDIS_HOST) {
+    throw new Error('Environment validation failed: Either REDIS_URL or REDIS_HOST must be defined');
+  }
+
   const validatedConfig = plainToInstance(
     EnvironmentVariables,
     {

@@ -9,15 +9,24 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   private isConnected = false;
 
   constructor(private configService: ConfigService) {
-    const host = this.configService.get<string>('REDIS_HOST') || '127.0.0.1';
-    const port = Number(this.configService.get<number>('REDIS_PORT')) || 6379;
+    const redisUrl = this.configService.get<string>('REDIS_URL');
 
-    this.client = new Redis({
-      host,
-      port,
-      maxRetriesPerRequest: null, // Required by BullMQ
-      lazyConnect: true,          // Don't block startup
-    });
+    if (redisUrl) {
+      this.client = new Redis(redisUrl, {
+        maxRetriesPerRequest: null, // Required by BullMQ
+        lazyConnect: true,          // Don't block startup
+      });
+    } else {
+      const host = this.configService.get<string>('REDIS_HOST') || '127.0.0.1';
+      const port = Number(this.configService.get<number>('REDIS_PORT')) || 6379;
+
+      this.client = new Redis({
+        host,
+        port,
+        maxRetriesPerRequest: null, // Required by BullMQ
+        lazyConnect: true,          // Don't block startup
+      });
+    }
 
     this.client.on('connect', () => {
       this.logger.log('Successfully connected to Redis');
