@@ -72,6 +72,7 @@ jobs:
           REDIS_HOST: localhost
           REDIS_PORT: 6379
           JWT_SECRET: test-secret-key-change-me
+          JWT_EXPIRES_IN: "1d"
         run: npm test
 
       - name: Run Backend E2E Tests
@@ -81,6 +82,7 @@ jobs:
           REDIS_HOST: localhost
           REDIS_PORT: 6379
           JWT_SECRET: test-secret-key-change-me
+          JWT_EXPIRES_IN: "1d"
         run: npm run test:e2e
 
       - name: Build Backend
