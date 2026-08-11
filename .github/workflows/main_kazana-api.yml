@@ -40,7 +40,12 @@ jobs:
 
       - name: Prune dev dependencies
         working-directory: ./backend
-        run: npm prune --production
+        run: |
+          cp -R node_modules/.prisma ./prisma_temp
+          npm prune --production
+          mkdir -p node_modules/.prisma
+          cp -R ./prisma_temp/* node_modules/.prisma/
+          rm -rf ./prisma_temp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
