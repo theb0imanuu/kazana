@@ -38,4 +38,4 @@ COPY --from=builder /usr/src/app/src/prisma ./src/prisma
 EXPOSE 3000
 ENV NODE_ENV=production
 
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main"]
